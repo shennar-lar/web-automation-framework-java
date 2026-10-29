@@ -28,3 +28,14 @@ src/
 │   └── resources/
 │       ├── features/          # Cucumber Gherkin (.feature) specifications
 │       └── TestNG.xml         # Test suite orchestration & parallel execution
+
+```mermaid
+graph TD
+    A[TestNG / Cucumber Runner] --> B[BaseTest Configuration]
+    B --> C[Driver & Config Loader]
+    C --> D[Browser Instance - Chrome/Firefox]
+    D --> E[Page Object Model - POM]
+    E --> F[Test Scenarios & Assertions]
+    F --> G[TestListener - Lifecycle Logging]
+    G --> H[Execution Reports & Logs]
+```

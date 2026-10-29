@@ -1,5 +1,7 @@
 # Enterprise Web Automation Framework (Java & Selenium)
 
+[![UI Tests](https://github.com/shennar-lar/web-automation-framework-java/actions/workflows/gradle-tests.yml/badge.svg)](https://github.com/shennar-lar/web-automation-framework-java/actions)
+
 A modular, scalable test automation framework built in **Java** and **Selenium WebDriver** for end-to-end regression, smoke, and functional testing on web applications.
 
 Architected using the **Page Object Model (POM)** and **BDD (Cucumber / Gherkin)** to ensure high maintainability, clean test separation, and resilience against flaky DOM elements.

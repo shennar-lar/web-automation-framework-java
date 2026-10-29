@@ -1,0 +1,7 @@
+allprojects {
+    tasks.register("runInfoPanelDomInspection", JavaExec) {
+        dependsOn tasks.named("testClasses")
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = "InfoPanel.InfoPanelDomInspection"
+    }
+}

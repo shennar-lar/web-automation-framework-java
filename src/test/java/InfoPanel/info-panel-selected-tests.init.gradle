@@ -1,0 +1,33 @@
+gradle.projectsEvaluated {
+    def project = gradle.rootProject
+
+    project.tasks.register(
+            "infoPanelSelectedTests",
+            org.gradle.api.tasks.testing.Test
+    ) {
+        dependsOn project.tasks.named("testClasses")
+        testClassesDirs = project.sourceSets.test.output.classesDirs
+        classpath = project.sourceSets.test.runtimeClasspath
+
+        useTestNG()
+        filter {
+            includeTest(
+                    "InfoPanel.InfoPanelTests",
+                    "INTERNSHIP_110428_verifyInfoPanelOpens"
+            )
+            includeTest(
+                    "InfoPanel.InfoPanelTests",
+                    "INTERNSHIP_110429_verifyInfoPanelCloses"
+            )
+            includeTest(
+                    "InfoPanel.InfoPanelTests",
+                    "INTERNSHIP_110432_verifyMissingLyrics"
+            )
+            includeTest(
+                    "InfoPanel.InfoPanelTests",
+                    "INTERNSHIP_110433_verifyUnknownAlbumInformation"
+            )
+            failOnNoMatchingTests = true
+        }
+    }
+}

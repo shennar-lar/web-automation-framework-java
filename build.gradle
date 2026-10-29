@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.testng:testng:7.6.1'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.5.0'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:6.0.1'
+    testImplementation 'io.rest-assured:rest-assured:6.0.1'
+}
+
+test {
+    useTestNG() {
+        suites "src/test/resources/TestNG.xml"
+    }
+}
+
+tasks.register('loginValidationCopilotTest', Test) {
+    group = 'verification'
+    description = 'Runs LoginValidationCopilotTests and writes Zephyr-compatible JUnit XML.'
+
+    dependsOn tasks.named('testClasses')
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    useTestNG()
+    filter {
+        includeTestsMatching 'LoginValidationCopilotTests'
+    }
+
+    reports {
+        junitXml {
+            required = true
+            outputLocation = layout.buildDirectory.dir('zephyr/login-validation/junit-xml')
+        }
+        html.required = false
+    }
+}

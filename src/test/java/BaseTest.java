@@ -9,6 +9,11 @@ import org.testng.annotations.BeforeSuite;
 import java.time.Duration;
 
 public class BaseTest {
+
+    // ThreadLocal ensures every parallel test thread gets its own isolated browser session
+    private static final ThreadLocal<WebDriver> threadDriver = new ThreadLocal<>();
+
+    // Kept for backward compatibility with existing tests
     protected WebDriver driver;
 
     @BeforeSuite
@@ -16,20 +21,42 @@ public class BaseTest {
         WebDriverManager.chromedriver().setup();
     }
 
+    public static WebDriver getDriver() {
+        return threadDriver.get();
+    }
+
+    public static void setDriver(WebDriver driverInstance) {
+        threadDriver.set(driverInstance);
+    }
+
     @BeforeMethod
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
 
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.get("https://qa.koel.app/");
+        // Automatically enables headless mode if running inside GitHub Actions (CI)
+        if (System.getenv("CI") != null || Boolean.parseBoolean(System.getProperty("headless", "false"))) {
+            options.addArguments("--headless=new");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+        }
+
+        WebDriver localDriver = new ChromeDriver(options);
+        setDriver(localDriver);
+        this.driver = getDriver();
+
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        getDriver().manage().window().maximize();
+        getDriver().get("https://qa.koel.app/");
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        if (getDriver() != null) {
+            getDriver().quit();
+            threadDriver.remove(); // Prevents memory leaks in parallel test runners
         }
     }
 

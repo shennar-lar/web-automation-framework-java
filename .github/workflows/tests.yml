@@ -1,0 +1,33 @@
+name: Automated UI Regression Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Allows you to manually click "Run workflow" anytime!
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    env:
+      CI: "true"
+      KOEL_EMAIL: "test.user@example.com"
+      KOEL_PASSWORD: "TestPassword123!"
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Grant Execute Permission for Gradle Wrapper
+      run: chmod +x gradlew
+
+    - name: Run Tests with Virtual Display (xvfb)
+      run: xvfb-run ./gradlew test

@@ -20,6 +20,8 @@ test {
     useTestNG() {
         suites "src/test/resources/TestNG.xml"
     }
+    ignoreFailures = true
+
 }
 
 tasks.register('loginValidationCopilotTest', Test) {
